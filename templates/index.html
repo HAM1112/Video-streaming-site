@@ -20,29 +20,69 @@
         
         
         {% if request.user.is_authenticated%}
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            <div class="flex gap-4">
-                <p>Name :</p>
-                <div class="border border-2 border-black ">
-                    {{form.name}}
-                </div>
-            </div>
-            <div class="flex gap-4 mt-2">
-                <p>Video :</p>
-                <div class="">
-                    {{form.video_file}}
-                </div>
-            </div>
+        <div class="flex justify-between content-center bg-blue-300 my-4 p-3">
+            <div class="h-full ">
+                <form action="{% url 'all-videos' %}" method="post">
+                    {% csrf_token %}
+                    <div class="flex content-center items-center gap-2">
+                        <div class="flex">
+                            <p>Search :</p>
+                            <input type="text" name="search" id="" class="ms-2">
+                        </div>
+                        <div class="form-group text-black">
+                            <label for="sortSelect">Sort By:</label>
+                            <select class="form-control" id="sortSelect" name="selected">
+                              <option value="latest"  {% if selected == 'latest' %}selected{% endif %}>Latest</option>
+                              <option value="oldest"  {% if selected == 'oldest' %}selected{% endif %}>Oldest</option>
+                              <!-- Add more options as needed -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-group text-black">
+                            <label for="categoryselect">Posted By :</label>
+                            <select class="form-control" id="categoryselect" name="user">
+                              <option value="All"  {% if c_selected == 'All' %}selected{% endif %}>All</option>
+                              {% for user in users %}
+                                <option value="{{user.id}}"  {% if c_selected == user.id %}selected{% endif %}>{{user.username}}</option>
+                              {% endfor %}
+                              <!-- Add more options as needed -->
+                            </select>
+                        </div>
+                        
 
-            {% if error %}
-                <p>{{error}}</p>
-            {% endif %}
-            <button type="submit" class="bg-gray-400 px-3 py-1 rounded mt-2">Upload</button>
+                    </div>
+
+                    <button class="bg-gray-400 px-2 rounded mt-2">Search</button>
+
+                </form>
+
+                <button class="bg-green-600 py-2 px-3 rounded text-white"><a href="{% url 'stream' %}">Start Streaming</a></button>
+            </div>
         
-        
-        </form>
+            <form method="post" enctype="multipart/form-data" class="">
+                {% csrf_token %}
+                <h2 class="text-2xl my-2">Upload New Video</h2>
+                <div class="flex gap-4">
+                    <p>Name :</p>
+                    <div class="border border-2 border-black ">
+                        {{form.name}}
+                    </div>
+                </div>
+                <div class="flex gap-4 mt-2">
+                    <p>Video :</p>
+                    <div class="">
+                        {{form.video_file}}
+                    </div>
+                </div>
+    
+                {% if error %}
+                    <p>{{error}}</p>
+                {% endif %}
+                <button type="submit" class="bg-gray-400 px-3 py-1 rounded mt-2">Upload</button>
+            
+            
+            </form>
+        </div>
         <div class="w-full grid grid-cols-4 gap-3">
             {% for video in videos %}
                 <div class="bg-slate-200 p-4 border border-2 border-gray-400 rounded-xl">

@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import SignupForm, LoginForm
 from videos.forms import VideoForm
 from videos.models import Video
-
+from django.contrib.auth.models import User
 
 # Home page
 def index(request):
@@ -17,13 +17,14 @@ def index(request):
             video.save()
             return redirect('home')
         else:
+            users = User.objects.all()
             videos = Video.objects.all()
-            return render(request, 'index.html', {'form': form , "error" : 'upload video file only' , 'videos' : videos})
+            return render(request, 'index.html', {'form': form , "error" : 'upload video file only' , 'videos' : videos , 'users' : users})
 
-    
+    users = User.objects.all()
     form = VideoForm()
     videos = Video.objects.all()
-    return render(request, 'index.html' , {'form': form , 'videos' : videos})
+    return render(request, 'index.html' , {'form': form , 'videos' : videos , 'users' : users})
 
 # signup page
 def user_signup(request):
