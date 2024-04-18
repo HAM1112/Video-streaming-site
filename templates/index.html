@@ -1,0 +1,69 @@
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div class="p-8">
+
+        {% if request.user.is_authenticated %}
+        <div  class="w-full flex justify-between">
+            <p>{{ request.user.username }}</p>
+            <a href="{% url 'logout' %}" class="text-blue-500">Logout</a>
+        </div>
+        {% else %}
+        <div class="w-full ">
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'signup' %}">Signup</a>
+        </div>
+        {% endif %}
+        
+        
+        
+        <h1 class="text-6xl my-8">Welcome!</h1>
+        
+        
+        {% if request.user.is_authenticated%}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="flex gap-4">
+                <p>Name :</p>
+                <div class="border border-2 border-black ">
+                    {{form.name}}
+                </div>
+            </div>
+            <div class="flex gap-4 mt-2">
+                <p>Video :</p>
+                <div class="">
+                    {{form.video_file}}
+                </div>
+            </div>
+
+            {% if error %}
+                <p>{{error}}</p>
+            {% endif %}
+            <button type="submit" class="bg-gray-400 px-3 py-1 rounded mt-2">Upload</button>
+        
+        
+        </form>
+        <div class="w-full grid grid-cols-4 gap-3">
+            {% for video in videos %}
+                <div class="bg-slate-200 p-4 border border-2 border-gray-400 rounded-xl">
+                    <h2 class="text-xl font-bold">{{video.name}}</h2>
+        
+                    <p>Posted by <span class="font-semibold">{{video.user}}</span> </p>
+        
+                    
+                    <video name='demo' controls autoplay width='400' height='350'>
+                        <source src="{{ video.video_file.url }}" >
+        
+                    </video>
+                    <button class="bg-red-600 my-2 p-2 border rounded ">
+                        <a class="text-white" href="{% url 'delete-video' video.id %}">Delete video</a>
+                    <button>
+                </div>
+            {% endfor %}
+        </div>
+        
+        
+        {% else %}
+            <h2>Please Login First</h2>
+        {% endif %}
+</div>
